@@ -11,39 +11,66 @@ def log_client(line):
     log_parts = line.split("|")
     return log_parts[3]
 
+def print_day(date, clients, prior_clients):
+    new_clients = ''
+    repeat_clients = ''
+
+    for client in clients:
+        if client in prior_clients:
+            repeat_clients += '#'
+        else:
+            new_clients += '='
+
+    #print(f'{date} {len(clients):0>3}/{len(prior_clients):0>3} {" ".join(sorted(clients))}')
+    print(f'{date} {len(clients):0>3}/{len(prior_clients):0>3} {repeat_clients + new_clients}')
+
 def main():
     print("Hello World?")
 
-    line_count = 0
+    current_clients = [] # unique clients for DATE
 
-    current_clients = []
+    prior_clients = [] # unique clients EVER
 
-    current_date = "foo" # will be updated to include 'current' date from line in log file
+    repeat_clients = []
+
+    current_date = None # will be updated to include 'current' date from line in log file
 
     #with open('pocket.log-records', 'rU') as f:
     #    for line in f:
 
     for line in sys.stdin:
-        line_count += 1
         line_date = log_date(line)
         line_client = log_client(line)
 
-        if line_count == 1:
+        if current_date is None:
+            current_clients.append(line_client)
             current_date = line_date
-            current_clients = [ line_client ]
 
+        elif current_date == line_date:
+            if not line_client in current_clients:
+                current_clients.append(line_client)
         else:
-            if not line_date == current_date:
-                print("{0} {1} {2}".format(current_date, len(current_clients), ' '.join(sorted(current_clients))))
-                current_clients = [ line_client ]
-                current_date = line_date
-            else:
-                if not line_client in current_clients:
-                    current_clients.append(line_client)
+            # current_date is not None and current_date != line_date
+            print_day(current_date, current_clients, prior_clients)
 
-        #sys.stdout.write("{0} {1}".format(line_count,line))
+            # add current_clients to prior_clients
+            for client in current_clients:
+                if not client in prior_clients:
+                    prior_clients.append(client)
 
-    print("{0} {1} {2}".format(current_date, len(current_clients), ' '.join(sorted(current_clients))))
+            current_clients = [ line_client ]
+            current_date = line_date
+
+        # Add current client to all_clients list
+        if line_client in prior_clients:
+            if not line_client in repeat_clients:
+                repeat_clients.append(line_client)
+
+    print_day(current_date, current_clients, prior_clients)
+
+    print(f'Repeat clients: {len(repeat_clients):0>3} {",".join(repeat_clients)}')
+
+    print(f'Prior clients: {len(prior_clients):0>3} {",".join(prior_clients)}')
 # Main
 main()
 
