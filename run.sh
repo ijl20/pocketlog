@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ssh tfc_prod@tfc-app1.cl.cam.ac.uk /home/tfc_prod/pocketlog.sh
+ssh tfc_prod@smartcambridge.org /home/tfc_prod/pocketlog.sh
 
-sftp tfc_prod@tfc-app1.cl.cam.ac.uk:/home/tfc_prod/pocket.log pocket.log
+sftp tfc_prod@smartcambridge.org:/home/tfc_prod/pocket.log pocket.log
 

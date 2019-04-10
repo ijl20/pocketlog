@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 
 import sys
 
@@ -27,8 +28,14 @@ def print_day(date, total_clients, clients, repeat_clients):
 
     print(f'{date},{len(clients):0>3},{len(today_repeat_clients)},{len(new_clients)},{total_clients:0>3},{repeat_clients_str + new_clients_str},{"+".join(sorted(today_repeat_clients))},{"+".join(sorted(new_clients))}')
 
-def main():
-    print("Date,Day Users,Day Repeat Users,Day New Users,Repeat User Ids")
+if __name__=="__main__":
+
+    if len(sys.argv) != 2:
+        print("Usage: ")
+        print("  pockelog.py [input_file_name] >output_file_name")
+        sys.exit(0)
+
+    print("Date,Day Users,Day Repeat Users,Day New Users,Total Users,Bar chart,Repeat User Ids")
 
     current_clients = [] # unique clients for DATE
 
@@ -41,7 +48,7 @@ def main():
     ####################################################################
     # Build 'repeat_clients' list
     ####################################################################
-    with open('pocket.log', 'rU') as f:
+    with open(sys.argv[1], 'rU') as f:
         for line in f:
 
     #for line in sys.stdin:
@@ -77,7 +84,7 @@ def main():
 
     prior_clients = []
 
-    with open('pocket.log', 'rU') as f:
+    with open(sys.argv[1], 'rU') as f:
         for line in f:
 
     #for line in sys.stdin:
@@ -110,6 +117,4 @@ def main():
 
     print(f'Prior clients,{len(prior_clients):0>3},{"+".join(prior_clients)}')
 
-# Main
-main()
 
